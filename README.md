@@ -1,2 +1,2 @@
-# bsuir_first_course_fis_cpp
-Not good code, but should work
+# My weak code for BSUIR
+Not good code, but should work out
