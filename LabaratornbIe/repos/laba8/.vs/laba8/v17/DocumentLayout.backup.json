@@ -1,0 +1,37 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Loonikov\\source\\repos\\laba8\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{7C82FA67-7576-4630-99CA-D662F8B9824F}|laba8.vcxproj|C:\\Users\\Loonikov\\source\\repos\\laba8\\laba8.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{7C82FA67-7576-4630-99CA-D662F8B9824F}|laba8.vcxproj|solutionrelative:laba8.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 0,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "laba8.cpp",
+              "DocumentMoniker": "C:\\Users\\Loonikov\\source\\repos\\laba8\\laba8.cpp",
+              "RelativeDocumentMoniker": "laba8.cpp",
+              "ToolTip": "C:\\Users\\Loonikov\\source\\repos\\laba8\\laba8.cpp",
+              "RelativeToolTip": "laba8.cpp",
+              "ViewState": "AgIAAEsAAAAAAAAAAADwvzEAAAAFAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-16T15:40:17.152Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

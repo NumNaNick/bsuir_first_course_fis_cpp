@@ -1,0 +1,39 @@
+﻿  ConsoleApplication1.cpp
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(52,15): warning C4244: 'return': conversion from 'WPARAM' to 'int', possible loss of data
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(77,23): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'hOldFont' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(119,15):
+      see declaration of 'hOldFont'
+  
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'hFont' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(115,15):
+      see declaration of 'hFont'
+  
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'startY' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(82,13):
+      see declaration of 'startY'
+  
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'startX' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(81,13):
+      see declaration of 'startX'
+  
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'cellSize' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(78,13):
+      see declaration of 'cellSize'
+  
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'boardSize' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(77,13):
+      see declaration of 'boardSize'
+  
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'hBrushBrown' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(74,16):
+      see declaration of 'hBrushBrown'
+  
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'hBrushBlack' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(73,16):
+      see declaration of 'hBrushBlack'
+  
+C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(141,5): error C2360: initialization of 'hBrushWhite' is skipped by 'case' label
+      C:\Users\Loonikov\source\repos\ConsoleApplication1\ConsoleApplication1.cpp(72,16):
+      see declaration of 'hBrushWhite'
+  

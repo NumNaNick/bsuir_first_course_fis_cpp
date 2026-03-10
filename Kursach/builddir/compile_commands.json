@@ -1,0 +1,8 @@
+[
+  {
+    "directory": "C:\\Users\\geski\\Documents\\Kursovaya2\\builddir",
+    "command": "\"cc\" \"-Idemo.exe.p\" \"-I.\" \"-I..\" \"-fdiagnostics-color=always\" \"-D_FILE_OFFSET_BITS=64\" \"-Wall\" \"-Winvalid-pch\" \"-O0\" \"-g\" -MD -MQ demo.exe.p/main.c.obj -MF \"demo.exe.p\\main.c.obj.d\" -o demo.exe.p/main.c.obj \"-c\" ../main.c",
+    "file": "../main.c",
+    "output": "demo.exe.p/main.c.obj"
+  }
+]

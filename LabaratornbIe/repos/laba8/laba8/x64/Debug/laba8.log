@@ -1,0 +1,4 @@
+﻿  laba8.cpp
+C:\Users\Loonikov\source\repos\laba8\laba8.cpp(44,34): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+C:\Users\Loonikov\source\repos\laba8\laba8.cpp(54,29): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+  laba8.vcxproj -> C:\Users\Loonikov\source\repos\laba8\x64\Debug\laba8.exe

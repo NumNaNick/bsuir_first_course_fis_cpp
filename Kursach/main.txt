@@ -1,0 +1,344 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_TICKETS 100
+#define MAX_ZONA 20
+#define MAX_TIP 10
+#define FILENAME "tickets.bin"
+#define REPORT_PREFIX "report_"
+
+typedef struct {
+    char zona[MAX_ZONA];
+    int free_seats;
+    int price;
+    char tip[MAX_TIP];
+    int discount_allowed;
+} Ticket;
+
+int count = 0;
+
+int my_strlen(const char* s) {
+    int l = 0;
+    while (s[l] != 0) l++;
+    return l;
+}
+
+void my_strcpy(char* dest, const char* src) {
+    int i = 0;
+    while (src[i] != 0) {
+        dest[i] = src[i];
+        i++;
+    }
+    dest[i] = 0;
+}
+
+int my_strcmp(const char* s1, const char* s2) {
+    while (*s1 != 0 && *s1 == *s2) {
+        s1++;
+        s2++;
+    }
+    return (unsigned char)*s1 - (unsigned char)*s2;
+}
+
+void save_tickets(Ticket* tickets, int n) {
+    FILE* f = fopen(FILENAME, "wb");
+    if (f) {
+        fwrite(&n, sizeof(int), 1, f);
+        fwrite(tickets, sizeof(Ticket), n, f);
+        fclose(f);
+    }
+}
+
+int load_tickets(Ticket* tickets) {
+    FILE* f = fopen(FILENAME, "rb");
+    if (!f) return 0;
+    fread(&count, sizeof(int), 1, f);
+    if (count > MAX_TICKETS || fread(tickets, sizeof(Ticket), count, f) != count) {
+        count = 0;
+    }
+    fclose(f);
+    return count;
+}
+
+int linear_search_free(Ticket* tickets, int n, int seats) {
+    for (int i = 0; i < n; i++) {
+        if (tickets[i].free_seats >= seats) return i;
+    }
+    return -1;
+}
+
+int interpolation_search_price(Ticket* tickets, int n, int price) {
+    int low = 0, high = n - 1;
+    while (low <= high && price >= tickets[low].price && price <= tickets[high].price) {
+        if (low == high) return (tickets[low].price == price) ? low : -1;
+        double ratio = (double)(price - tickets[low].price) / (tickets[high].price - tickets[low].price);
+        int pos = low + (int)(ratio * (high - low));
+        if (tickets[pos].price == price) return pos;
+        if (tickets[pos].price < price) low = pos + 1;
+        else high = pos - 1;
+    }
+    return -1;
+}
+
+int partition_zone(Ticket* a, int low, int high) {
+    char pivot[MAX_ZONA];
+    my_strcpy(pivot, a[high].zona);
+    int i = low - 1;
+    for (int j = low; j < high; j++) {
+        if (my_strcmp(a[j].zona, pivot) <= 0) {
+            i++;
+            Ticket t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+        }
+    }
+    Ticket t = a[i + 1];
+    a[i + 1] = a[high];
+    a[high] = t;
+    return i + 1;
+}
+
+void quick_sort_zone(Ticket* a, int low, int high) {
+    if (low < high) {
+        int pi = partition_zone(a, low, high);
+        quick_sort_zone(a, low, pi - 1);
+        quick_sort_zone(a, pi + 1, high);
+    }
+}
+
+void insertion_sort_free(Ticket* a, int n) {
+    int i, j;
+    for (i = 1; i < n; i++) {
+        Ticket key = a[i];
+        j = i - 1;
+        while (j >= 0 && a[j].free_seats > key.free_seats) {
+            a[j + 1] = a[j];
+            j--;
+        }
+        a[j + 1] = key;
+    }
+}
+
+void bubble_sort_price(Ticket* a, int n) {
+    int i, j;
+    for (i = 0; i < n - 1; i++) {
+        for (j = 0; j < n - i - 1; j++) {
+            if (a[j].price > a[j + 1].price) {
+                Ticket t = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = t;
+            }
+        }
+    }
+}
+
+void print_ticket(FILE* f, Ticket* t, int console) {
+    if (console) {
+        printf("Зона: %s, Свободных: %d, Цена: %d, Тип: %s, Льгота: %s\n",
+               t->zona, t->free_seats, t->price, t->tip,
+               t->discount_allowed ? "да" : "нет");
+    }
+    if (f) {
+        fprintf(f, "Зона: %s, Свободных: %d, Цена: %d, Тип: %s, Льгота: %s\n",
+                t->zona, t->free_seats, t->price, t->tip,
+                t->discount_allowed ? "да" : "нет");
+    }
+}
+
+void print_report(const char* fn, Ticket* ts, int nn, const char* title, int console) {
+    FILE* rf = fopen(fn, "w");
+    if (console) printf("\n=== %s ===\n", title);
+    if (rf) fprintf(rf, "=== %s ===\n\n", title);
+    for (int i = 0; i < nn; i++) {
+        print_ticket(rf, &ts[i], console);
+    }
+    if (rf) fclose(rf);
+    if (console) {
+        printf("\nОтчет: %s\n", fn);
+    }
+}
+
+void search_places(int seats, int discount) {
+    Ticket tickets[MAX_TICKETS];
+    int n = load_tickets(tickets);
+    Ticket suitable[MAX_TICKETS];
+    int cnt = 0;
+    for (int i = 0; i < n; i++) {
+        if (tickets[i].free_seats >= seats &&
+            (!discount || tickets[i].discount_allowed)) {
+            suitable[cnt++] = tickets[i];
+        }
+    }
+    bubble_sort_price(suitable, cnt);
+    char fn[50];
+    sprintf(fn, "%splaces_%d_%d.txt", REPORT_PREFIX, seats, discount);
+    print_report(fn, suitable, cnt, "Подходящие места", 1);
+}
+
+void stats_by_type() {
+    Ticket tickets[MAX_TICKETS];
+    int n = load_tickets(tickets);
+    char types[MAX_TICKETS][MAX_TIP] = {0};
+    int type_cnt = 0;
+    for (int i = 0; i < n; i++) {
+        int found = 0;
+        for (int j = 0; j < type_cnt; j++) {
+            if (my_strcmp(types[j], tickets[i].tip) == 0) {
+                found = 1;
+                break;
+            }
+        }
+        if (!found) {
+            my_strcpy(types[type_cnt++], tickets[i].tip);
+        }
+    }
+    char fn[50];
+    sprintf(fn, "%sstats.txt", REPORT_PREFIX);
+    FILE* rf = fopen(fn, "w");
+    printf("\n=== Статистика по типам ===\n\n");
+    fprintf(rf, "=== Статистика по типам ===\n\n");
+    for (int tt = 0; tt < type_cnt; tt++) {
+        Ticket by_type[MAX_TICKETS];
+        int cntt = 0;
+        long long sum_p = 0;
+        for (int i = 0; i < n; i++) {
+            if (my_strcmp(tickets[i].tip, types[tt]) == 0) {
+                by_type[cntt] = tickets[i];
+                sum_p += tickets[i].price;
+                cntt++;
+            }
+        }
+        // Сортировка по убыванию свободных мест
+        for (int ii = 1; ii < cntt; ii++) {
+            Ticket key = by_type[ii];
+            int j = ii - 1;
+            while (j >= 0 && by_type[j].free_seats < key.free_seats) {
+                by_type[j + 1] = by_type[j];
+                j--;
+            }
+            by_type[j + 1] = key;
+        }
+        double avg = cntt ? (double)sum_p / cntt : 0;
+        char title[100];
+        sprintf(title, "Тип: %s (ср. цена: %.2f)", types[tt], avg);
+        printf("%s\n\n", title);
+        fprintf(rf, "%s\n\n", title);
+        for (int i = 0; i < cntt; i++) {
+            print_ticket(rf, &by_type[i], 1);
+        }
+        printf("\n");
+        fprintf(rf, "\n");
+    }
+    fclose(rf);
+    printf("Сохранено: %s\n", fn);
+}
+
+void menu_search() {
+    printf("1. По местам  2. По цене\n");
+    int ch, val;
+    scanf("%d", &ch);
+    Ticket tk[MAX_TICKETS];
+    int nn = load_tickets(tk);
+    char fn[50];
+    if (ch == 1) {
+        printf("Мест: ");
+        scanf("%d", &val);
+        int idx = linear_search_free(tk, nn, val);
+        sprintf(fn, "%slinear_%d.txt", REPORT_PREFIX, val);
+        if (idx >= 0) {
+            print_report(fn, &tk[idx], 1, "Линейный поиск", 1);
+        } else {
+            FILE* f = fopen(fn, "w");
+            fprintf(f, "Не найдено\n");
+            fclose(f);
+            printf("Не найдено\n");
+        }
+    } else {
+        Ticket tmp[MAX_TICKETS];
+        for (int i = 0; i < nn; i++) tmp[i] = tk[i];
+        bubble_sort_price(tmp, nn);
+        printf("Цена: ");
+        scanf("%d", &val);
+        int idx = interpolation_search_price(tmp, nn, val);
+        sprintf(fn, "%sinterp_%d.txt", REPORT_PREFIX, val);
+        if (idx >= 0) {
+            print_report(fn, &tmp[idx], 1, "Интерполяционный поиск", 1);
+        } else {
+            FILE* f = fopen(fn, "w");
+            fprintf(f, "Не найдено\n");
+            fclose(f);
+            printf("Не найдено\n");
+        }
+    }
+}
+
+void menu_sort() {
+    printf("1.Зона(быстрая) 2.Места(вставки) 3.Цена(пузырек)\n");
+    int ch;
+    scanf("%d", &ch);
+    Ticket tk[MAX_TICKETS];
+    int nn = load_tickets(tk);
+    Ticket* srt = (Ticket*)malloc(nn * sizeof(Ticket));
+    for (int i = 0; i < nn; i++) srt[i] = tk[i];
+    char fnn[50];
+    if (ch == 1) {
+        quick_sort_zone(srt, 0, nn-1);
+        sprintf(fnn, "%ssort_zone.txt", REPORT_PREFIX);
+        print_report(fnn, srt, nn, "Сорт. по зоне", 1);
+    } else if (ch == 2) {
+        insertion_sort_free(srt, nn);
+        sprintf(fnn, "%ssort_free.txt", REPORT_PREFIX);
+        print_report(fnn, srt, nn, "Сорт. по местам", 1);
+    } else {
+        bubble_sort_price(srt, nn);
+        sprintf(fnn, "%ssort_price.txt", REPORT_PREFIX);
+        print_report(fnn, srt, nn, "Сорт. по цене", 1);
+    }
+    free(srt);
+}
+
+int main() {
+    int opt;
+    Ticket tk[MAX_TICKETS];
+    do {
+        printf("\nМеню:\n1.Загрузить\n2.Добавить\n3.Поиски\n4.Сортировки\n5.Места\n6.Статистика\n0.Выход\n");
+        scanf("%d", &opt);
+        switch (opt) {
+            case 1:
+                count = load_tickets(tk);
+                printf("Загружено: %d\n", count);
+                break;
+            case 2: {
+                if (count >= MAX_TICKETS) {
+                    printf("Полон!\n");
+                    break;
+                }
+                printf("Зона: ");
+                scanf("%s", tk[count].zona);
+                printf("Места: ");
+                scanf("%d", &tk[count].free_seats);
+                printf("Цена: ");
+                scanf("%d", &tk[count].price);
+                printf("Тип: ");
+                scanf("%s", tk[count].tip);
+                printf("Льгота(1/0): ");
+                scanf("%d", &tk[count].discount_allowed);
+                count++;
+                save_tickets(tk, count);
+                printf("OK\n");
+                break;
+            }
+            case 3: menu_search(); break;
+            case 4: menu_sort(); break;
+            case 5: {
+                int s, d;
+                printf("Места: "); scanf("%d", &s);
+                printf("Льгота(1/0): "); scanf("%d", &d);
+                search_places(s, d);
+                break;
+            }
+            case 6: stats_by_type(); break;
+        }
+    } while (opt);
+    return 0;
+}

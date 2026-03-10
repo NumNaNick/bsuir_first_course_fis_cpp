@@ -1,0 +1,3 @@
+﻿  laba4.cpp
+C:\Users\despa\source\repos\laba4\laba4\laba4.cpp(42,19): warning C4244: аргумент: преобразование "time_t" в "unsigned int", возможна потеря данных
+  laba4.vcxproj -> C:\Users\despa\source\repos\laba4\x64\Debug\laba4.exe
