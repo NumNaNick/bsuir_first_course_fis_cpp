@@ -1,46 +1,15 @@
+/*
+СОРТИРОВКА И ПОИСК В МАССИВАХ
+14. Ключ: номер рейса автобуса. Методы сортировки: QuickSort и метод Шелла.
+14. Вывести на экран пункт назначения автобуса с номером рейса 295. 
+Методы поиска: линейный с барьером и двоичный.
+*/
 #include <iostream>
-#include <stdio.h>
 
-int *stack;
-int tos = 0;
-int MAX;
-
-void push(int i)
-{
-  if(tos >= MAX) {
-    printf("Стек полон\n");
-    return;
-  }
-  stack[tos] = i;
-  tos++;
-}
-/* Получить верхний элемент стека. */
-int pop(void)
-{
-  if(tos <= 0) {
-    printf("Стек пуст\n");
-    return 0;
-  }
-  tos--;
-  return stack[tos];
-}
+using namespace std;
 
 int main() {
 
-    std::cout << "--- Введите размер стека: ";
-    std::cin >> MAX;
 
-    stack = new int[MAX];
-
-    push(10);
-    push(20);
-    push(30);
-
-    printf("Popped: %d\n", pop());
-    printf("Popped: %d\n", pop());
-    printf("Popped: %d\n", pop());
-    printf("Popped: %d\n", pop());
-
-    delete[] stack;
-    return 0;
+  return 0;
 }
