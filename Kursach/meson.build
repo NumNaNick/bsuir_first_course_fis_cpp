@@ -1,2 +1,2 @@
-project('kursovaya', 'c')
-executable('demo', 'main.c')
+project('kursovaya', 'cpp')
+executable('demo', 'main.cpp')

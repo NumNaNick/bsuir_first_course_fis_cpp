@@ -1,9 +1,9 @@
 // ВАРИАНТ 14
 #include <stdio.h>
 #include <stdlib.h>
+#include <locale.h>
 
 long long factorial_iterative(int n) {
-    if (n == 0 || n == 1) return 1;
     long long result = 1;
     for (int i = 2; i <= n; i++) {
         result *= i;
@@ -11,13 +11,13 @@ long long factorial_iterative(int n) {
     return result;
 }
 
+/*
 long long factorial_recursive(int n) {
-    if (n == 0 || n == 1) return 1;
     return n * factorial_recursive(n - 1);
 }
+*/
 
 long long combination_iterative(int n, int k) {
-    if (k < 0 || k > n) return 0;
     long long numerator = factorial_iterative(n);
     long long denominator = factorial_iterative(k) * factorial_iterative(n - k);
     
@@ -25,15 +25,14 @@ long long combination_iterative(int n, int k) {
 }
 
 long long combination_recursive(int n, int k) {
-    if (k < 0 || k > n) return 0;
     if (k == 0 || k == n) return 1;
-    // C(n, k) = C(n-1, k-1) + C(n-1, k)
+    // C(n, k) = C(n-1, k-1) + C(n-1, k) Правило треугольника Паскаля
     return combination_recursive(n - 1, k - 1) + combination_recursive(n - 1, k);
 }
 
 int main() {
 
-    system("chcp 65001 > nul");
+    setlocale(LC_ALL, "en_US.UTF-8");
 
     int n, k;
     int valid = 0;

@@ -1,6 +1,7 @@
-#include <stdio.h>
+#include <iostream>
 #include <stdlib.h>
-#include <locale.h>
+
+using namespace std;
 
 #define FILENAME "tickets.dat"
 #define REPORT_FILE "report.txt"
@@ -15,14 +16,30 @@ struct Ticket {
     int is_discount_allowed;
 };
 
+int strcmp(const char* s1, const char* s2) {
+    while (*s1 && (*s1 == *s2)) {
+        s1++;
+        s2++;
+    }
+    return *(unsigned char*)s1 - *(unsigned char*)s2;
+}
+
+void strcpy(char* dest, const char* src) {
+    while (*src) {
+        *dest++ = *src++;
+    }
+    *dest = '\0';
+}
+
 void clearScreen() {
     system("cls");
 }
 
 void waitForEnter() {
-    printf("\nНажмите Enter чтобы продолжить...");
-    fflush(stdin);
-    getchar();
+    cout << "\nНажмите Enter чтобы продолжить...";
+    cin.ignore(1000, '\n');
+    cin.ignore();
+    cin.get();
 }
 
 int getFileSize() {
@@ -34,18 +51,13 @@ int getFileSize() {
     return size;
 }
 
-void clearInputBuffer() {
-    int c;
-    while ((c = getchar()) != '\n' && c != EOF);
-}
-
 void printTicket(struct Ticket t) {
-    printf("----------------------------------------\n");
-    printf("Зона: %s\n", t.zone);
-    printf("Свободных мест: %d\n", t.free_seats);
-    printf("Стоимость: %.2f\n", t.price);
-    printf("Тип кресел: %s\n", t.chair_type);
-    printf("Льготный билет: %s\n", t.is_discount_allowed ? "Да" : "Нет");
+    cout << "----------------------------------------" << endl;
+    cout << "Зона: " << t.zone << endl;
+    cout << "Свободных мест: " << t.free_seats << endl;
+    cout << "Стоимость: " << t.price << endl;
+    cout << "Тип кресел: " << t.chair_type << endl;
+    cout << "Льготный билет: " << (t.is_discount_allowed ? "Да" : "Нет") << endl;
 }
 
 void addTicket() {
@@ -53,50 +65,36 @@ void addTicket() {
     struct Ticket newTicket;
     FILE *f;
     
-    printf("\n=== ДОБАВЛЕНИЕ НОВОГО БИЛЕТА ===\n\n");
+    cout << "\n=== ДОБАВЛЕНИЕ НОВОГО БИЛЕТА ===\n\n";
     
-    clearInputBuffer();
+    cout << "Введите зону расположения: ";
+    cin.getline(newTicket.zone, 50);
     
-    printf("Введите зону расположения: ");
-    fgets(newTicket.zone, 50, stdin);
-    for (int i = 0; i < 50; i++) {
-        if (newTicket.zone[i] == '\n') {
-            newTicket.zone[i] = '\0';
-            break;
-        }
-    }
+    cout << "Введите количество свободных мест: ";
+    cin >> newTicket.free_seats;
+    cin.ignore();
     
-    printf("Введите количество свободных мест: ");
-    scanf("%d", &newTicket.free_seats);
-    clearInputBuffer();
+    cout << "Введите стоимость билета: ";
+    cin >> newTicket.price;
+    cin.ignore();
     
-    printf("Введите стоимость билета: ");
-    scanf("%f", &newTicket.price);
-    clearInputBuffer();
+    cout << "Введите тип кресел: ";
+    cin.getline(newTicket.chair_type, 30);
     
-    printf("Введите тип кресел: ");
-    fgets(newTicket.chair_type, 30, stdin);
-    for (int i = 0; i < 30; i++) {
-        if (newTicket.chair_type[i] == '\n') {
-            newTicket.chair_type[i] = '\0';
-            break;
-        }
-    }
-    
-    printf("Разрешена ли льгота? (1-да, 0-нет): ");
-    scanf("%d", &newTicket.is_discount_allowed);
-    clearInputBuffer();
+    cout << "Разрешена ли льгота? (1-да, 0-нет): ";
+    cin >> newTicket.is_discount_allowed;
+    cin.ignore();
     
     f = fopen(FILENAME, "ab");
     if (f == NULL) {
-        printf("Ошибка открытия файла!\n");
+        cout << "Ошибка открытия файла!" << endl;
         return;
     }
     
     fwrite(&newTicket, sizeof(struct Ticket), 1, f);
     fclose(f);
     
-    printf("\nБилет успешно добавлен!\n");
+    cout << "\nБилет успешно добавлен!" << endl;
     waitForEnter();
 }
 
@@ -106,11 +104,11 @@ void viewTickets() {
     FILE *f;
     int count = 0;
     
-    printf("\n=== ВСЕ БИЛЕТЫ ===\n\n");
+    cout << "\n=== ВСЕ БИЛЕТЫ ===\n\n";
     
     f = fopen(FILENAME, "rb");
     if (f == NULL) {
-        printf("Файл с билетами не найден.\n");
+        cout << "Файл с билетами не найден." << endl;
         waitForEnter();
         return;
     }
@@ -123,10 +121,10 @@ void viewTickets() {
     fclose(f);
     
     if (count == 0) {
-        printf("Билетов пока нет.\n");
+        cout << "Билетов пока нет." << endl;
     } else {
-        printf("----------------------------------------\n");
-        printf("Всего билетов: %d\n", count);
+        cout << "----------------------------------------" << endl;
+        cout << "Всего билетов: " << count << endl;
     }
     
     waitForEnter();
@@ -138,44 +136,43 @@ void deleteTicket() {
     FILE *f, *temp;
     int choice, index;
     
-    printf("\n=== УДАЛЕНИЕ БИЛЕТА ===\n\n");
+    cout << "\n=== УДАЛЕНИЕ БИЛЕТА ===\n\n";
     
     f = fopen(FILENAME, "rb");
     if (f == NULL) {
-        printf("Файл с билетами не найден.\n");
+        cout << "Файл с билетами не найден." << endl;
         waitForEnter();
         return;
     }
     
     // Загружаем все билеты в массив
-    struct Ticket *allTickets = malloc(MAX_TICKETS * sizeof(struct Ticket));
+    struct Ticket *allTickets = (struct Ticket*)malloc(MAX_TICKETS * sizeof(struct Ticket));
     int count = 0;
     
-    printf("Доступные зоны для удаления:\n");
-    printf("----------------------------------------\n");
+    cout << "Доступные зоны для удаления:" << endl;
+    cout << "----------------------------------------" << endl;
     
     while (fread(&t, sizeof(struct Ticket), 1, f) == 1) {
         allTickets[count] = t;
-        printf("%d. Зона: %s | Свободных мест: %d | Цена: %.2f | Тип: %s\n", 
-               count + 1, t.zone, t.free_seats, t.price, t.chair_type);
+        cout << count + 1 << ". Зона: " << t.zone << " | Свободных мест: " << t.free_seats << " | Цена: " << t.price << " | Тип: " << t.chair_type << endl;
         count++;
     }
     fclose(f);
     
     if (count == 0) {
-        printf("Нет билетов для удаления.\n");
+        cout << "Нет билетов для удаления." << endl;
         free(allTickets);
         waitForEnter();
         return;
     }
     
-    printf("----------------------------------------\n");
-    printf("Выберите номер зоны для удаления (0 - отмена): ");
-    scanf("%d", &choice);
-    clearInputBuffer();
+    cout << "----------------------------------------" << endl;
+    cout << "Выберите номер зоны для удаления (0 - отмена): ";
+    cin >> choice;
+    cin.ignore();
     
     if (choice == 0 || choice > count) {
-        printf("Удаление отменено.\n");
+        cout << "Удаление отменено." << endl;
         free(allTickets);
         waitForEnter();
         return;
@@ -183,20 +180,20 @@ void deleteTicket() {
     
     index = choice - 1;
     
-    printf("\nВы выбрали:\n");
-    printf("Зона: %s\n", allTickets[index].zone);
-    printf("Свободных мест: %d\n", allTickets[index].free_seats);
-    printf("Цена: %.2f\n", allTickets[index].price);
-    printf("Тип кресел: %s\n", allTickets[index].chair_type);
-    printf("Льготный: %s\n", allTickets[index].is_discount_allowed ? "Да" : "Нет");
+    cout << "\nВы выбрали:" << endl;
+    cout << "Зона: " << allTickets[index].zone << endl;
+    cout << "Свободных мест: " << allTickets[index].free_seats << endl;
+    cout << "Цена: " << allTickets[index].price << endl;
+    cout << "Тип кресел: " << allTickets[index].chair_type << endl;
+    cout << "Льготный: " << (allTickets[index].is_discount_allowed ? "Да" : "Нет") << endl;
     
-    printf("\nТочно удалить? (1-да, 0-нет): ");
+    cout << "\nТочно удалить? (1-да, 0-нет): ";
     int confirm;
-    scanf("%d", &confirm);
-    clearInputBuffer();
+    cin >> confirm;
+    cin.ignore();
     
     if (confirm != 1) {
-        printf("Удаление отменено.\n");
+        cout << "Удаление отменено." << endl;
         free(allTickets);
         waitForEnter();
         return;
@@ -205,7 +202,7 @@ void deleteTicket() {
     // Создаем новый файл без выбранного билета
     temp = fopen("temp.dat", "wb");
     if (temp == NULL) {
-        printf("Ошибка создания временного файла.\n");
+        cout << "Ошибка создания временного файла." << endl;
         free(allTickets);
         waitForEnter();
         return;
@@ -222,7 +219,7 @@ void deleteTicket() {
     remove(FILENAME);
     rename("temp.dat", FILENAME);
     
-    printf("\nБилет успешно удален!\n");
+    cout << "\nБилет успешно удален!" << endl;
     
     free(allTickets);
     waitForEnter();
@@ -277,33 +274,8 @@ void quickSortByZone(struct Ticket *arr, int low, int high) {
         struct Ticket pivot = arr[(low + high) / 2];
         
         while (i <= j) {
-            while (1) {
-                int compare = 0, k = 0;
-                while (arr[i].zone[k] != '\0' && pivot.zone[k] != '\0' && arr[i].zone[k] == pivot.zone[k]) {
-                    k++;
-                }
-                if (arr[i].zone[k] == '\0' && pivot.zone[k] == '\0') compare = 0;
-                else if (arr[i].zone[k] == '\0') compare = -1;
-                else if (pivot.zone[k] == '\0') compare = 1;
-                else compare = arr[i].zone[k] - pivot.zone[k];
-                
-                if (compare < 0) i++;
-                else break;
-            }
-            
-            while (1) {
-                int compare = 0, k = 0;
-                while (arr[j].zone[k] != '\0' && pivot.zone[k] != '\0' && arr[j].zone[k] == pivot.zone[k]) {
-                    k++;
-                }
-                if (arr[j].zone[k] == '\0' && pivot.zone[k] == '\0') compare = 0;
-                else if (arr[j].zone[k] == '\0') compare = -1;
-                else if (pivot.zone[k] == '\0') compare = 1;
-                else compare = arr[j].zone[k] - pivot.zone[k];
-                
-                if (compare > 0) j--;
-                else break;
-            }
+            while (strcmp(arr[i].zone, pivot.zone) < 0) i++;
+            while (strcmp(arr[j].zone, pivot.zone) > 0) j--;
             
             if (i <= j) {
                 struct Ticket temp = arr[i];
@@ -346,23 +318,23 @@ void bubbleSortByPrice(struct Ticket *arr, int n) {
 
 void findSuitableSeats() {
     clearScreen();
-    printf("\n=== ПОИСК ПОДХОДЯЩЕГО МЕСТА ===\n\n");
+    cout << "\n=== ПОИСК ПОДХОДЯЩЕГО МЕСТА ===\n\n";
     
     int neededSeats, needDiscount;
-    printf("Введите необходимое количество мест: ");
-    scanf("%d", &neededSeats);
-    printf("Нужен ли льготный билет? (1-да, 0-нет): ");
-    scanf("%d", &needDiscount);
-    clearInputBuffer();
+    cout << "Введите необходимое количество мест: ";
+    cin >> neededSeats;
+    cout << "Нужен ли льготный билет? (1-да, 0-нет): ";
+    cin >> needDiscount;
+    cin.ignore();
     
     FILE *f = fopen(FILENAME, "rb");
     if (f == NULL) {
-        printf("Файл с билетами не найден.\n");
+        cout << "Файл с билетами не найден." << endl;
         waitForEnter();
         return;
     }
     
-    struct Ticket *allTickets = malloc(MAX_TICKETS * sizeof(struct Ticket));
+    struct Ticket *allTickets = (struct Ticket*)malloc(MAX_TICKETS * sizeof(struct Ticket));
     int count = 0;
     
     while (fread(&allTickets[count], sizeof(struct Ticket), 1, f) == 1) {
@@ -383,7 +355,7 @@ void findSuitableSeats() {
     }
     
     if (suitableCount == 0) {
-        printf("\nНет подходящих мест.\n");
+        cout << "\nНет подходящих мест." << endl;
         free(allTickets);
         waitForEnter();
         return;
@@ -399,7 +371,7 @@ void findSuitableSeats() {
         }
     }
     
-    printf("\nПодходящие места (в порядке возрастания цены):\n");
+    cout << "\nПодходящие места (в порядке возрастания цены):" << endl;
     for (int i = 0; i < suitableCount; i++) {
         printTicket(suitable[i]);
     }
@@ -414,7 +386,7 @@ void findSuitableSeats() {
                     suitable[i].chair_type, suitable[i].is_discount_allowed ? "Да" : "Нет");
         }
         fclose(report);
-        printf("\nОтчет сохранен в файл %s\n", REPORT_FILE);
+        cout << "\nОтчет сохранен в файл " << REPORT_FILE << endl;
     }
     
     free(allTickets);
@@ -423,16 +395,16 @@ void findSuitableSeats() {
 
 void statisticsByChairType() {
     clearScreen();
-    printf("\n=== СТАТИСТИКА ПО ТИПУ КРЕСЕЛ ===\n\n");
+    cout << "\n=== СТАТИСТИКА ПО ТИПУ КРЕСЕЛ ===\n\n";
     
     FILE *f = fopen(FILENAME, "rb");
     if (f == NULL) {
-        printf("Файл с билетами не найден.\n");
+        cout << "Файл с билетами не найден." << endl;
         waitForEnter();
         return;
     }
     
-    struct Ticket *allTickets = malloc(MAX_TICKETS * sizeof(struct Ticket));
+    struct Ticket *allTickets = (struct Ticket*)malloc(MAX_TICKETS * sizeof(struct Ticket));
     int count = 0;
     
     while (fread(&allTickets[count], sizeof(struct Ticket), 1, f) == 1) {
@@ -446,24 +418,13 @@ void statisticsByChairType() {
     for (int i = 0; i < count; i++) {
         int found = 0;
         for (int j = 0; j < typeCount; j++) {
-            int match = 1;
-            for (int k = 0; k < 30; k++) {
-                if (allTickets[i].chair_type[k] != uniqueTypes[j][k]) {
-                    match = 0;
-                    break;
-                }
-                if (allTickets[i].chair_type[k] == '\0') break;
-            }
-            if (match) {
+            if (strcmp(allTickets[i].chair_type, uniqueTypes[j]) == 0) {
                 found = 1;
                 break;
             }
         }
         if (!found) {
-            for (int k = 0; k < 30; k++) {
-                uniqueTypes[typeCount][k] = allTickets[i].chair_type[k];
-                if (allTickets[i].chair_type[k] == '\0') break;
-            }
+            strcpy(uniqueTypes[typeCount], allTickets[i].chair_type);
             typeCount++;
         }
     }
@@ -474,8 +435,8 @@ void statisticsByChairType() {
     }
     
     for (int i = 0; i < typeCount; i++) {
-        printf("\nТип кресел: %s\n", uniqueTypes[i]);
-        printf("----------------------------------------\n");
+        cout << "\nТип кресел: " << uniqueTypes[i] << endl;
+        cout << "----------------------------------------" << endl;
         
         if (report != NULL) {
             fprintf(report, "Тип кресел: %s\n", uniqueTypes[i]);
@@ -487,15 +448,7 @@ void statisticsByChairType() {
         float sumPrice = 0;
         
         for (int j = 0; j < count; j++) {
-            int match = 1;
-            for (int k = 0; k < 30; k++) {
-                if (allTickets[j].chair_type[k] != uniqueTypes[i][k]) {
-                    match = 0;
-                    break;
-                }
-                if (allTickets[j].chair_type[k] == '\0') break;
-            }
-            if (match) {
+            if (strcmp(allTickets[j].chair_type, uniqueTypes[i]) == 0) {
                 typeTickets[typeTicketCount] = allTickets[j];
                 sumPrice += allTickets[j].price;
                 typeTicketCount++;
@@ -523,7 +476,7 @@ void statisticsByChairType() {
         }
         
         float avgPrice = sumPrice / typeTicketCount;
-        printf("\nСредняя стоимость для типа '%s': %.2f\n", uniqueTypes[i], avgPrice);
+        cout << "\nСредняя стоимость для типа '" << uniqueTypes[i] << "': " << avgPrice << endl;
         if (report != NULL) {
             fprintf(report, "\nСредняя стоимость: %.2f\n\n", avgPrice);
         }
@@ -531,7 +484,7 @@ void statisticsByChairType() {
     
     if (report != NULL) {
         fclose(report);
-        printf("\nОтчет сохранен в файл %s\n", REPORT_FILE);
+        cout << "\nОтчет сохранен в файл " << REPORT_FILE << endl;
     }
     
     free(allTickets);
@@ -539,54 +492,54 @@ void statisticsByChairType() {
 }
 
 void printMainMenu() {
-    printf("\n");
-    printf("========================================\n");
-    printf("    УЧЕТ БИЛЕТОВ НА КОНЦЕРТ\n");
-    printf("========================================\n");
-    printf("1. Добавить билет\n");
-    printf("2. Показать все билеты\n");
-    printf("3. Удалить билет\n");
-    printf("4. Линейный поиск по кол-ву мест\n");
-    printf("5. Интерполяционный поиск по цене\n");
-    printf("6. Быстрая сортировка по зоне\n");
-    printf("7. Сортировка вставками по кол-ву мест\n");
-    printf("8. Сортировка пузырьком по цене\n");
-    printf("9. Поиск подходящего места\n");
-    printf("10. Статистика по типу кресел\n");
-    printf("11. Выход\n");
-    printf("========================================\n");
+    cout << "\n";
+    cout << "========================================\n";
+    cout << "    УЧЕТ БИЛЕТОВ НА КОНЦЕРТ\n";
+    cout << "========================================\n";
+    cout << "1. Добавить билет\n";
+    cout << "2. Показать все билеты\n";
+    cout << "3. Удалить билет\n";
+    cout << "4. Линейный поиск по кол-ву мест\n";
+    cout << "5. Интерполяционный поиск по цене\n";
+    cout << "6. Быстрая сортировка по зоне\n";
+    cout << "7. Сортировка вставками по кол-ву мест\n";
+    cout << "8. Сортировка пузырьком по цене\n";
+    cout << "9. Поиск подходящего места\n";
+    cout << "10. Статистика по типу кресел\n";
+    cout << "11. Выход\n";
+    cout << "========================================\n";
 }
 
 int main() {
 
-    setlocale(LC_ALL, "en_US.UTF-8"); //поддержка юникода для командной строки виндовс
+    setlocale(LC_ALL, "en_US.UTF-8");
 
     clearScreen();
-    printf("ПРОГРАММА УЧЕТА БИЛЕТОВ\n");
-    printf("=======================\n\n");
+    cout << "ПРОГРАММА УЧЕТА БИЛЕТОВ" << endl;
+    cout << "=======================" << endl << endl;
     
     FILE *f = fopen(FILENAME, "rb");
     if (f == NULL) {
         f = fopen(FILENAME, "wb");
         if (f != NULL) {
-            printf("Создан новый файл %s\n", FILENAME);
+            cout << "Создан новый файл " << FILENAME << endl;
             fclose(f);
         }
     } else {
-        printf("Найден файл %s\n", FILENAME);
+        cout << "Найден файл " << FILENAME << endl;
         fclose(f);
     }
     
-    printf("\nНажмите Enter чтобы начать...");
-    getchar();
+    cout << "\nНажмите Enter чтобы начать...";
+    cin.get();
     
     int choice;
     do {
         clearScreen();
         printMainMenu();
-        printf("Выберите действие: ");
-        scanf("%d", &choice);
-        clearInputBuffer();
+        cout << "Выберите действие: ";
+        cin >> choice;
+        cin.ignore();
         
         switch(choice) {
             case 1: addTicket(); break;
@@ -594,19 +547,19 @@ int main() {
             case 3: deleteTicket(); break;
             case 4: {
                 clearScreen();
-                printf("=== ЛИНЕЙНЫЙ ПОИСК ПО КОЛИЧЕСТВУ МЕСТ ===\n\n");
+                cout << "=== ЛИНЕЙНЫЙ ПОИСК ПО КОЛИЧЕСТВУ МЕСТ ===\n\n";
                 int seats;
-                printf("Введите количество мест: ");
-                scanf("%d", &seats);
-                clearInputBuffer();
+                cout << "Введите количество мест: ";
+                cin >> seats;
+                cin.ignore();
                 
                 struct Ticket results[MAX_TICKETS];
                 int count = linearSearchByFreeSeats(seats, results);
                 
                 if (count == 0) {
-                    printf("Билеты с %d местами не найдены.\n", seats);
+                    cout << "Билеты с " << seats << " местами не найдены." << endl;
                 } else {
-                    printf("Найдено билетов: %d\n", count);
+                    cout << "Найдено билетов: " << count << endl;
                     for (int i = 0; i < count; i++) {
                         printTicket(results[i]);
                     }
@@ -616,16 +569,16 @@ int main() {
             }
             case 5: {
                 clearScreen();
-                printf("=== ИНТЕРПОЛЯЦИОННЫЙ ПОИСК ПО ЦЕНЕ ===\n\n");
+                cout << "=== ИНТЕРПОЛЯЦИОННЫЙ ПОИСК ПО ЦЕНЕ ===\n\n";
                 
                 FILE *f = fopen(FILENAME, "rb");
                 if (f == NULL) {
-                    printf("Файл не найден.\n");
+                    cout << "Файл не найден." << endl;
                     waitForEnter();
                     break;
                 }
                 
-                struct Ticket *arr = malloc(MAX_TICKETS * sizeof(struct Ticket));
+                struct Ticket *arr = (struct Ticket*)malloc(MAX_TICKETS * sizeof(struct Ticket));
                 int n = 0;
                 while (fread(&arr[n], sizeof(struct Ticket), 1, f) == 1) n++;
                 fclose(f);
@@ -633,16 +586,16 @@ int main() {
                 bubbleSortByPrice(arr, n);
                 
                 float price;
-                printf("Введите цену для поиска: ");
-                scanf("%f", &price);
-                clearInputBuffer();
+                cout << "Введите цену для поиска: ";
+                cin >> price;
+                cin.ignore();
                 
                 int index = interpolationSearchByPrice(price, arr, n);
                 
                 if (index == -1) {
-                    printf("Билет с ценой %.2f не найден.\n", price);
+                    cout << "Билет с ценой " << price << " не найден." << endl;
                 } else {
-                    printf("Билет найден на позиции %d:\n", index + 1);
+                    cout << "Билет найден на позиции " << index + 1 << ":" << endl;
                     printTicket(arr[index]);
                 }
                 
@@ -652,23 +605,23 @@ int main() {
             }
             case 6: {
                 clearScreen();
-                printf("=== БЫСТРАЯ СОРТИРОВКА ПО ЗОНЕ ===\n\n");
+                cout << "=== БЫСТРАЯ СОРТИРОВКА ПО ЗОНЕ ===\n\n";
                 
                 FILE *f = fopen(FILENAME, "rb");
                 if (f == NULL) {
-                    printf("Файл не найден.\n");
+                    cout << "Файл не найден." << endl;
                     waitForEnter();
                     break;
                 }
                 
-                struct Ticket *arr = malloc(MAX_TICKETS * sizeof(struct Ticket));
+                struct Ticket *arr = (struct Ticket*)malloc(MAX_TICKETS * sizeof(struct Ticket));
                 int n = 0;
                 while (fread(&arr[n], sizeof(struct Ticket), 1, f) == 1) n++;
                 fclose(f);
                 
                 quickSortByZone(arr, 0, n - 1);
                 
-                printf("Отсортированные билеты:\n");
+                cout << "Отсортированные билеты:" << endl;
                 for (int i = 0; i < n; i++) {
                     printTicket(arr[i]);
                 }
@@ -679,23 +632,23 @@ int main() {
             }
             case 7: {
                 clearScreen();
-                printf("=== СОРТИРОВКА ВСТАВКАМИ ПО КОЛИЧЕСТВУ МЕСТ ===\n\n");
+                cout << "=== СОРТИРОВКА ВСТАВКАМИ ПО КОЛИЧЕСТВУ МЕСТ ===\n\n";
                 
                 FILE *f = fopen(FILENAME, "rb");
                 if (f == NULL) {
-                    printf("Файл не найден.\n");
+                    cout << "Файл не найден." << endl;
                     waitForEnter();
                     break;
                 }
                 
-                struct Ticket *arr = malloc(MAX_TICKETS * sizeof(struct Ticket));
+                struct Ticket *arr = (struct Ticket*)malloc(MAX_TICKETS * sizeof(struct Ticket));
                 int n = 0;
                 while (fread(&arr[n], sizeof(struct Ticket), 1, f) == 1) n++;
                 fclose(f);
                 
                 insertionSortByFreeSeats(arr, n);
                 
-                printf("Отсортированные билеты:\n");
+                cout << "Отсортированные билеты:" << endl;
                 for (int i = 0; i < n; i++) {
                     printTicket(arr[i]);
                 }
@@ -706,23 +659,23 @@ int main() {
             }
             case 8: {
                 clearScreen();
-                printf("=== СОРТИРОВКА ПУЗЫРЬКОМ ПО ЦЕНЕ ===\n\n");
+                cout << "=== СОРТИРОВКА ПУЗЫРЬКОМ ПО ЦЕНЕ ===\n\n";
                 
                 FILE *f = fopen(FILENAME, "rb");
                 if (f == NULL) {
-                    printf("Файл не найден.\n");
+                    cout << "Файл не найден." << endl;
                     waitForEnter();
                     break;
                 }
                 
-                struct Ticket *arr = malloc(MAX_TICKETS * sizeof(struct Ticket));
+                struct Ticket *arr = (struct Ticket*)malloc(MAX_TICKETS * sizeof(struct Ticket));
                 int n = 0;
                 while (fread(&arr[n], sizeof(struct Ticket), 1, f) == 1) n++;
                 fclose(f);
                 
                 bubbleSortByPrice(arr, n);
                 
-                printf("Отсортированные билеты:\n");
+                cout << "Отсортированные билеты:" << endl;
                 for (int i = 0; i < n; i++) {
                     printTicket(arr[i]);
                 }
@@ -735,10 +688,10 @@ int main() {
             case 10: statisticsByChairType(); break;
             case 11:
                 clearScreen();
-                printf("До свидания!\n");
+                cout << "До свидания!" << endl;
                 break;
             default:
-                printf("Ошибка! Введите число от 1 до 11\n");
+                cout << "Ошибка! Введите число от 1 до 11" << endl;
                 waitForEnter();
         }
     } while(choice != 11);
