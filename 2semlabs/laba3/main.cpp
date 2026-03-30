@@ -8,7 +8,6 @@
 //ВАРИАНТ 14
 //Из созданного списка удалить каждый второй элемент
 #include <iostream>
-#include <stdlib.h>
 
 using namespace std;
 

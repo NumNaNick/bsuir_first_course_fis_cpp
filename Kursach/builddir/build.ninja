@@ -8,16 +8,16 @@ ninja_required_version = 1.8.2
 
 # Rules for compiling.
 
-rule c_COMPILER
- command = "cc" $ARGS -MD -MQ $out -MF $DEPFILE -o $out "-c" $in
+rule cpp_COMPILER
+ command = "c++" $ARGS -MD -MQ $out -MF $DEPFILE -o $out "-c" $in
  deps = gcc
  depfile = $DEPFILE_UNQUOTED
- description = Compiling C object $out
+ description = Compiling C++ object $out
 
 # Rules for linking.
 
-rule c_LINKER
- command = "cc" $ARGS -o $out $in $LINK_ARGS
+rule cpp_LINKER
+ command = "c++" $ARGS -o $out $in $LINK_ARGS
  description = Linking target $out
 
 # Other rules
@@ -28,7 +28,7 @@ rule CUSTOM_COMMAND
  restat = 1
 
 rule REGENERATE_BUILD
- command = "C:\Program$ Files\Meson\meson.exe" "--internal" "regenerate" "C:\Users\geski\Documents\Kursovaya2" "."
+ command = "C:\Program$ Files\Meson\meson.exe" "--internal" "regenerate" "C:\Users\geski\Documents\GitHub_Repos\bsuir_first_course_fis_cpp\Kursach" "."
  description = Regenerating build files
  generator = 1
 
@@ -38,12 +38,12 @@ build PHONY: phony
 
 # Build rules for targets
 
-build demo.exe.p/main.c.obj: c_COMPILER ../main.c
- DEPFILE = "demo.exe.p\main.c.obj.d"
- DEPFILE_UNQUOTED = demo.exe.p\main.c.obj.d
- ARGS = "-Idemo.exe.p" "-I." "-I.." "-fdiagnostics-color=always" "-D_FILE_OFFSET_BITS=64" "-Wall" "-Winvalid-pch" "-O0" "-g"
+build demo.exe.p/main.cpp.obj: cpp_COMPILER ../main.cpp
+ DEPFILE = "demo.exe.p\main.cpp.obj.d"
+ DEPFILE_UNQUOTED = demo.exe.p\main.cpp.obj.d
+ ARGS = "-Idemo.exe.p" "-I." "-I.." "-fdiagnostics-color=always" "-D_GLIBCXX_ASSERTIONS=1" "-D_FILE_OFFSET_BITS=64" "-Wall" "-Winvalid-pch" "-O0" "-g"
 
-build demo.exe: c_LINKER demo.exe.p/main.c.obj | C$:/msys64/ucrt64/lib/libadvapi32.a C$:/msys64/ucrt64/lib/libcomdlg32.a C$:/msys64/ucrt64/lib/libgdi32.a C$:/msys64/ucrt64/lib/libkernel32.a C$:/msys64/ucrt64/lib/libole32.a C$:/msys64/ucrt64/lib/liboleaut32.a C$:/msys64/ucrt64/lib/libshell32.a C$:/msys64/ucrt64/lib/libuser32.a C$:/msys64/ucrt64/lib/libuuid.a C$:/msys64/ucrt64/lib/libwinspool.a
+build demo.exe: cpp_LINKER demo.exe.p/main.cpp.obj | C$:/msys64/ucrt64/lib/libadvapi32.a C$:/msys64/ucrt64/lib/libcomdlg32.a C$:/msys64/ucrt64/lib/libgdi32.a C$:/msys64/ucrt64/lib/libkernel32.a C$:/msys64/ucrt64/lib/libole32.a C$:/msys64/ucrt64/lib/liboleaut32.a C$:/msys64/ucrt64/lib/libshell32.a C$:/msys64/ucrt64/lib/libuser32.a C$:/msys64/ucrt64/lib/libuuid.a C$:/msys64/ucrt64/lib/libwinspool.a
  LINK_ARGS = "-Wl,--allow-shlib-undefined" "-Wl,--subsystem,console" "-Wl,--start-group" "-lkernel32" "-luser32" "-lgdi32" "-lwinspool" "-lshell32" "-lole32" "-loleaut32" "-luuid" "-lcomdlg32" "-ladvapi32" "-Wl,--end-group"
 
 # Test rules

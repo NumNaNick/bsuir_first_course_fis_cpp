@@ -1,37 +1,71 @@
 {
   "host": {
-    "c": {
+    "cpp": {
       "id": "gcc",
       "exelist": [
-        "cc"
+        "c++"
       ],
       "linker_exelist": [
-        "cc"
+        "c++"
       ],
       "file_suffixes": [
-        "c"
+        "cpp",
+        "cppm",
+        "cc",
+        "cp",
+        "cxx",
+        "c++",
+        "hh",
+        "hp",
+        "hpp",
+        "ipp",
+        "hxx",
+        "h++",
+        "ino",
+        "ixx",
+        "CPP",
+        "C",
+        "HPP",
+        "H"
       ],
-      "default_suffix": "c",
+      "default_suffix": "cpp",
       "version": "15.2.0",
-      "full_version": "cc (Rev8, Built by MSYS2 project) 15.2.0",
+      "full_version": "c++ (Rev8, Built by MSYS2 project) 15.2.0",
       "linker_id": "ld.bfd"
     }
   },
   "build": {
-    "c": {
+    "cpp": {
       "id": "gcc",
       "exelist": [
-        "cc"
+        "c++"
       ],
       "linker_exelist": [
-        "cc"
+        "c++"
       ],
       "file_suffixes": [
-        "c"
+        "cpp",
+        "cppm",
+        "cc",
+        "cp",
+        "cxx",
+        "c++",
+        "hh",
+        "hp",
+        "hpp",
+        "ipp",
+        "hxx",
+        "h++",
+        "ino",
+        "ixx",
+        "CPP",
+        "C",
+        "HPP",
+        "H"
       ],
-      "default_suffix": "c",
+      "default_suffix": "cpp",
       "version": "15.2.0",
-      "full_version": "cc (Rev8, Built by MSYS2 project) 15.2.0",
+      "full_version": "c++ (Rev8, Built by MSYS2 project) 15.2.0",
       "linker_id": "ld.bfd"
     }
   }

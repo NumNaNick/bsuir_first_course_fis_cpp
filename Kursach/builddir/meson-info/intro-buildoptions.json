@@ -319,59 +319,6 @@
     "description": "Maximum number of linker processes to run or 0 for no limit"
   },
   {
-    "name": "b_sanitize",
-    "value": [],
-    "section": "base",
-    "machine": "any",
-    "type": "array",
-    "description": "Code sanitizer to use"
-  },
-  {
-    "name": "b_pie",
-    "value": false,
-    "section": "base",
-    "machine": "any",
-    "type": "boolean",
-    "description": "Build executables as position independent"
-  },
-  {
-    "name": "b_thinlto_cache_dir",
-    "value": "",
-    "section": "base",
-    "machine": "any",
-    "type": "string",
-    "description": "Directory to store ThinLTO cache objects"
-  },
-  {
-    "name": "b_lto_threads",
-    "value": 0,
-    "section": "base",
-    "machine": "any",
-    "type": "integer",
-    "description": "Use multiple threads for Link Time Optimization"
-  },
-  {
-    "name": "b_thinlto_cache",
-    "value": false,
-    "section": "base",
-    "machine": "any",
-    "type": "boolean",
-    "description": "Use LLVM ThinLTO caching for faster incremental builds"
-  },
-  {
-    "name": "b_ndebug",
-    "value": "false",
-    "section": "base",
-    "machine": "any",
-    "choices": [
-      "true",
-      "false",
-      "if-release"
-    ],
-    "type": "combo",
-    "description": "Disable asserts"
-  },
-  {
     "name": "b_pch",
     "value": true,
     "section": "base",
@@ -380,25 +327,12 @@
     "description": "Use precompiled headers"
   },
   {
-    "name": "b_staticpic",
-    "value": true,
+    "name": "b_lto_threads",
+    "value": 0,
     "section": "base",
     "machine": "any",
-    "type": "boolean",
-    "description": "Build static libraries as position independent"
-  },
-  {
-    "name": "b_colorout",
-    "value": "always",
-    "section": "base",
-    "machine": "any",
-    "choices": [
-      "auto",
-      "always",
-      "never"
-    ],
-    "type": "combo",
-    "description": "Use colored output"
+    "type": "integer",
+    "description": "Use multiple threads for Link Time Optimization"
   },
   {
     "name": "b_coverage",
@@ -422,6 +356,14 @@
     "description": "Use profile guided optimization"
   },
   {
+    "name": "b_staticpic",
+    "value": true,
+    "section": "base",
+    "machine": "any",
+    "type": "boolean",
+    "description": "Build static libraries as position independent"
+  },
+  {
     "name": "b_lto",
     "value": false,
     "section": "base",
@@ -430,50 +372,143 @@
     "description": "Use link time optimization"
   },
   {
-    "name": "c_args",
+    "name": "b_pie",
+    "value": false,
+    "section": "base",
+    "machine": "any",
+    "type": "boolean",
+    "description": "Build executables as position independent"
+  },
+  {
+    "name": "b_colorout",
+    "value": "always",
+    "section": "base",
+    "machine": "any",
+    "choices": [
+      "auto",
+      "always",
+      "never"
+    ],
+    "type": "combo",
+    "description": "Use colored output"
+  },
+  {
+    "name": "b_thinlto_cache_dir",
+    "value": "",
+    "section": "base",
+    "machine": "any",
+    "type": "string",
+    "description": "Directory to store ThinLTO cache objects"
+  },
+  {
+    "name": "b_sanitize",
+    "value": [],
+    "section": "base",
+    "machine": "any",
+    "type": "array",
+    "description": "Code sanitizer to use"
+  },
+  {
+    "name": "b_thinlto_cache",
+    "value": false,
+    "section": "base",
+    "machine": "any",
+    "type": "boolean",
+    "description": "Use LLVM ThinLTO caching for faster incremental builds"
+  },
+  {
+    "name": "b_ndebug",
+    "value": "false",
+    "section": "base",
+    "machine": "any",
+    "choices": [
+      "true",
+      "false",
+      "if-release"
+    ],
+    "type": "combo",
+    "description": "Disable asserts"
+  },
+  {
+    "name": "cpp_args",
     "value": [],
     "section": "compiler",
     "machine": "host",
     "type": "array",
-    "description": "Extra arguments passed to the c compiler"
+    "description": "Extra arguments passed to the cpp compiler"
   },
   {
-    "name": "c_link_args",
+    "name": "cpp_link_args",
     "value": [],
     "section": "compiler",
     "machine": "host",
     "type": "array",
-    "description": "Extra arguments passed to the c linker"
+    "description": "Extra arguments passed to the cpp linker"
   },
   {
-    "name": "c_std",
+    "name": "cpp_std",
     "value": "none",
     "section": "compiler",
     "machine": "host",
     "choices": [
       "none",
-      "c89",
-      "c99",
-      "c11",
-      "c17",
-      "c18",
-      "c2x",
-      "c23",
-      "c2y",
-      "gnu89",
-      "gnu99",
-      "gnu11",
-      "gnu17",
-      "gnu18",
-      "gnu2x",
-      "gnu23",
-      "gnu2y"
+      "c++98",
+      "c++03",
+      "c++11",
+      "c++14",
+      "c++17",
+      "c++1z",
+      "c++2a",
+      "c++20",
+      "c++23",
+      "c++26",
+      "gnu++98",
+      "gnu++03",
+      "gnu++11",
+      "gnu++14",
+      "gnu++17",
+      "gnu++1z",
+      "gnu++2a",
+      "gnu++20",
+      "gnu++23",
+      "gnu++26"
     ],
     "type": "combo",
-    "description": "c language standard to use"
+    "description": "cpp language standard to use"
   },
   {
-    "name": "c_winlibs",
+    "name": "cpp_eh",
+    "value": "default",
+    "section": "compiler",
+    "machine": "host",
+    "choices": [
+      "none",
+      "default",
+      "a",
+      "s",
+      "sc"
+    ],
+    "type": "combo",
+    "description": "C++ exception handling type."
+  },
+  {
+    "name": "cpp_rtti",
+    "value": true,
+    "section": "compiler",
+    "machine": "host",
+    "type": "boolean",
+    "description": "Enable RTTI"
+  },
+  {
+    "name": "cpp_debugstl",
+    "value": false,
+    "section": "compiler",
+    "machine": "host",
+    "type": "boolean",
+    "description": "STL debug mode"
+  },
+  {
+    "name": "cpp_winlibs",
     "value": [
       "-lkernel32",
       "-luser32",
@@ -489,7 +524,19 @@
     "section": "compiler",
     "machine": "host",
     "type": "array",
-    "description": "Standard Windows libraries to link against"
+    "description": "Standard Win libraries to link against"
+  },
+  {
+    "name": "cpp_importstd",
+    "value": "false",
+    "section": "compiler",
+    "machine": "host",
+    "choices": [
+      "false",
+      "true"
+    ],
+    "type": "combo",
+    "description": "Use #import std."
   },
   {
     "name": "prefix",

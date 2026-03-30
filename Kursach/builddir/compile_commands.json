@@ -1,8 +1,8 @@
 [
   {
-    "directory": "C:\\Users\\geski\\Documents\\Kursovaya2\\builddir",
-    "command": "\"cc\" \"-Idemo.exe.p\" \"-I.\" \"-I..\" \"-fdiagnostics-color=always\" \"-D_FILE_OFFSET_BITS=64\" \"-Wall\" \"-Winvalid-pch\" \"-O0\" \"-g\" -MD -MQ demo.exe.p/main.c.obj -MF \"demo.exe.p\\main.c.obj.d\" -o demo.exe.p/main.c.obj \"-c\" ../main.c",
-    "file": "../main.c",
-    "output": "demo.exe.p/main.c.obj"
+    "directory": "C:\\Users\\geski\\Documents\\GitHub_Repos\\bsuir_first_course_fis_cpp\\Kursach\\builddir",
+    "command": "\"c++\" \"-Idemo.exe.p\" \"-I.\" \"-I..\" \"-fdiagnostics-color=always\" \"-D_GLIBCXX_ASSERTIONS=1\" \"-D_FILE_OFFSET_BITS=64\" \"-Wall\" \"-Winvalid-pch\" \"-O0\" \"-g\" -MD -MQ demo.exe.p/main.cpp.obj -MF \"demo.exe.p\\main.cpp.obj.d\" -o demo.exe.p/main.cpp.obj \"-c\" ../main.cpp",
+    "file": "../main.cpp",
+    "output": "demo.exe.p/main.cpp.obj"
   }
 ]

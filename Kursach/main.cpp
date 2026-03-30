@@ -1,5 +1,4 @@
 #include <iostream>
-#include <stdlib.h>
 
 using namespace std;
 
@@ -37,8 +36,6 @@ void clearScreen() {
 
 void waitForEnter() {
     cout << "\nНажмите Enter чтобы продолжить...";
-    cin.ignore(1000, '\n');
-    cin.ignore();
     cin.get();
 }
 
@@ -564,7 +561,7 @@ int main() {
                         printTicket(results[i]);
                     }
                 }
-                waitForEnter();
+                //waitForEnter();
                 break;
             }
             case 5: {
@@ -600,7 +597,7 @@ int main() {
                 }
                 
                 free(arr);
-                waitForEnter();
+                //waitForEnter();
                 break;
             }
             case 6: {
@@ -610,7 +607,7 @@ int main() {
                 FILE *f = fopen(FILENAME, "rb");
                 if (f == NULL) {
                     cout << "Файл не найден." << endl;
-                    waitForEnter();
+                    //waitForEnter();
                     break;
                 }
                 
@@ -627,7 +624,7 @@ int main() {
                 }
                 
                 free(arr);
-                waitForEnter();
+                //waitForEnter();
                 break;
             }
             case 7: {
@@ -637,7 +634,7 @@ int main() {
                 FILE *f = fopen(FILENAME, "rb");
                 if (f == NULL) {
                     cout << "Файл не найден." << endl;
-                    waitForEnter();
+                    //waitForEnter();
                     break;
                 }
                 
@@ -654,7 +651,7 @@ int main() {
                 }
                 
                 free(arr);
-                waitForEnter();
+                //waitForEnter();
                 break;
             }
             case 8: {
@@ -664,7 +661,7 @@ int main() {
                 FILE *f = fopen(FILENAME, "rb");
                 if (f == NULL) {
                     cout << "Файл не найден." << endl;
-                    waitForEnter();
+                    //waitForEnter();
                     break;
                 }
                 
@@ -681,7 +678,7 @@ int main() {
                 }
                 
                 free(arr);
-                waitForEnter();
+                //waitForEnter();
                 break;
             }
             case 9: findSuitableSeats(); break;

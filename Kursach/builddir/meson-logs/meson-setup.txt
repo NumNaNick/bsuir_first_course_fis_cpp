@@ -1,12 +1,12 @@
 The Meson build system
 Version: 1.10.0
-Source dir: C:\Users\geski\Documents\Kursovaya2
-Build dir: C:\Users\geski\Documents\Kursovaya2\builddir
+Source dir: C:\Users\geski\Documents\GitHub_Repos\bsuir_first_course_fis_cpp\Kursach
+Build dir: C:\Users\geski\Documents\GitHub_Repos\bsuir_first_course_fis_cpp\Kursach\builddir
 Build type: native build
 Project name: kursovaya
 Project version: undefined
-C compiler for the host machine: cc (gcc 15.2.0 "cc (Rev8, Built by MSYS2 project) 15.2.0")
-C linker for the host machine: cc ld.bfd 2.45.1
+C++ compiler for the host machine: c++ (gcc 15.2.0 "c++ (Rev8, Built by MSYS2 project) 15.2.0")
+C++ linker for the host machine: c++ ld.bfd 2.45.1
 Host machine cpu family: x86_64
 Host machine cpu: x86_64
 Build targets in project: 1
