@@ -5,7 +5,7 @@
 Решение поставленной задачи представить в виде блок-схемы.
 Во всех заданиях создать список из положительных и отрицательных случайных целых чисел.
 */
-//ВАРИАНТ 14
+//ВАРИАНТ 14 
 //Из созданного списка удалить каждый второй элемент
 #include <iostream>
 
@@ -18,30 +18,27 @@ struct Node {
 
 struct Stack {
     Node* top;
-    int size;
 };
 
-void initStack(Stack& s) {
-    s.top = nullptr;
-    s.size = 0;
-}
 
-void push(Stack& s, int val) {
+void stackIn(Stack& s, int val) {
     Node* newNode = new Node{val, s.top};
+    if (newNode == nullptr) {
+        cout << "Ошибка!\n";
+        return;
+    }
     s.top = newNode;
-    s.size++;
 }
 
-int pop(Stack& s) {
+int stackOut(Stack& s) {
     if (s.top == nullptr) {
-        cout << "Stack underflow\n";
+        cout << "Стек пуст\n";
         return 0;
     }
     int val = s.top->data;
     Node* temp = s.top;
     s.top = s.top->next;
     delete temp;
-    s.size--;
     return val;
 }
 
@@ -69,13 +66,25 @@ void viewStack(Stack& s) {
 
 void createRandomStack(Stack& s) {
     clearScreen();
-    cout << "=== Stack size ===\n";
-    cout << "Input stack size: \n";
     int size;
-    cin >> size;
-    initStack(s);
+    while (true) {
+        cout << "=== Stack size ===\n";
+        cout << "Input stack size: \n";
+        cin >> size;
+		if (cin.fail()) {
+            clearScreen();
+			cout << "Input a number.\n";
+			cin.clear();
+			cin.ignore(1000, '\n');
+		}
+		else {
+            break;
+		}
+	}
+
+    s.top = nullptr;
     for (int i = 0; i < size; i++) {
-        push(s, rand() % 101 - 50);
+        stackIn(s, rand() % 101 - 50);
     }
 }
 
@@ -94,6 +103,15 @@ void sortByDataExchange(Stack& s) {
         }
     } while (swapped);
 }
+
+//три связи вместо двух(методичка 2018)
+/*
+void Sort_p(Stack **p) {
+    Node *t = NULL, *tl, *r;
+    if ((*p)->next->next == NULL) return;
+
+}
+*/
 
 void sortByAddressRearrangement(Stack& s) {
     if (s.top == nullptr || s.top->next == nullptr) return;
@@ -130,7 +148,6 @@ void removeEverySecond(Stack& s) {
             Node* temp = current;
             current = current->next;
             delete temp;
-            s.size--;
         } else {
             prev = current;
             current = current->next;
@@ -141,13 +158,13 @@ void removeEverySecond(Stack& s) {
 
 void deleteStack(Stack& s) {
     while (s.top != nullptr) {
-        pop(s);
+        stackOut(s);
     }
 }
 
 int main() {
     Stack s;
-    initStack(s);
+    s.top = nullptr;
 
     while (true) {
         cout << "=== Stack-Stick ===\n";
@@ -169,28 +186,55 @@ int main() {
                 waitForEnter();
                 break;
             case 2: {
-                cout << "Enter number: ";
+                clearScreen();
                 int val;
-                cin >> val;
-                push(s, val);
+                while (true) {
+                    cout << "Enter number: ";
+                    cin >> val;
+		            if (cin.fail()) {
+                        clearScreen();
+			            cout << "Should be a number.\n";
+			            cin.clear();
+			            cin.ignore(1000, '\n');
+		            }
+		            else {
+                        break;
+		            }
+	            }
+                stackIn(s, val);
                 viewStack(s);
                 waitForEnter();
                 break;
             }
             case 3:
+                clearScreen();
                 viewStack(s);
                 waitForEnter();
                 break;
             case 4: {
-                cout << "   1. Rearranging the addresses of two neighboring elements\n";
-                cout << "   2. Information exchange between current and next elements\n";
-                cout << "Choose sorting method (1 or 2): ";
+                clearScreen();
                 int method;
-                cin >> method;
+                while (true) {
+                    cout << "   1. Rearranging the addresses of two neighboring elements\n";
+                    cout << "   2. Information exchange between current and next elements\n";
+                    cout << "Choose sorting method (1 or 2): ";
+                    cin >> method;
+		            if (cin.fail()) {
+                        clearScreen();
+			            cout << "Should be a number.\n";
+			            cin.clear();
+			            cin.ignore(1000, '\n');
+		            }
+		            else {
+                        break;
+		            }
+	            }
                 if (method == 1) {
                     sortByAddressRearrangement(s);
+                    clearScreen();
                 } else if (method == 2) {
                     sortByDataExchange(s);
+                    clearScreen();
                 } else {
                     cout << "Invalid method\n";
                 }
