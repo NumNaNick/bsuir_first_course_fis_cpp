@@ -11,252 +11,145 @@
 
 using namespace std;
 
-struct Node {
-    int data;
-    Node* next;
-};
-
 struct Stack {
-    Node* top;
+    int info;
+    Stack* next;
 };
 
+Stack* InStack(Stack* p, int in) {
+    Stack* t = new Stack;
+    t->info = in;
+    t->next = p;
+    return t;
+}
 
-void stackIn(Stack& s, int val) {
-    Node* newNode = new Node{val, s.top};
-    if (newNode == nullptr) {
-        cout << "Ошибка!\n";
-        return;
+Stack* OutStack(Stack* p, int* out) {
+    Stack* t = p;
+    *out = p->info;
+    p = p->next;
+    delete t;
+    return p;
+}
+
+void View(Stack* p) {
+    Stack* t = p;
+    while (t != NULL) {
+        cout << t->info << " ";
+        t = t->next;
     }
-    s.top = newNode;
+    cout << endl;
 }
 
-int stackOut(Stack& s) {
-    if (s.top == nullptr) {
-        cout << "Стек пуст\n";
-        return 0;
+void Del_All(Stack** p) {
+    Stack* t;
+    while (*p != NULL) {
+        t = *p;
+        *p = (*p)->next;
+        delete t;
     }
-    int val = s.top->data;
-    Node* temp = s.top;
-    s.top = s.top->next;
-    delete temp;
-    return val;
 }
 
-void clearScreen() {
-    system("cls");
+void sortByDataExchange(Stack* p) {
+    if (p == NULL) return;
+    Stack *t = NULL, *t1;
+    int r;
+    do {
+        t1 = p;
+        while (t1->next != t) {
+            if (t1->info > t1->next->info) {
+                r = t1->info;
+                t1->info = t1->next->info;
+                t1->next->info = r;
+            }
+            t1 = t1->next;
+        }
+        t = t1;
+    } while (p->next != t);
 }
 
-void waitForEnter() {
-    cout << "\nPress Enter to continue...";
-    cin.ignore(1000, '\n');
-    cin.get();
-    clearScreen();
+void sortByAddressRearrangement(Stack** p) {
+    if (*p == NULL || (*p)->next == NULL) return;
+
+    *p = InStack(*p, 0); 
+
+    Stack *t, *t1, *r;
+    bool swapped;
+    do {
+        swapped = false;
+        t = *p; 
+        while (t->next != NULL && t->next->next != NULL) {
+            t1 = t->next;
+            r = t1->next;
+            if (t1->info > r->info) {
+                t1->next = r->next;
+                r->next = t1;
+                t->next = r;
+                swapped = true;
+            }
+            t = t->next;
+        }
+    } while (swapped);
+
+    int temp;
+    *p = OutStack(*p, &temp);
 }
 
-void viewStack(Stack& s) {
-    cout << "=== Existing Stack Elements ===\n";
-    Node* current = s.top;
-    int count = 1;
-    while (current != nullptr) {
-        cout << count << ". " << current->data << "\n";
+void removeEverySecond(Stack** p) {
+    if (*p == NULL || (*p)->next == NULL) return;
+    Stack *current = *p;
+    Stack *temp;
+    while (current != NULL && current->next != NULL) {
+        temp = current->next;
+        current->next = temp->next;
+        delete temp;
         current = current->next;
-        count++;
-    }
-}
-
-void createRandomStack(Stack& s) {
-    clearScreen();
-    int size;
-    while (true) {
-        cout << "=== Stack size ===\n";
-        cout << "Input stack size: \n";
-        cin >> size;
-		if (cin.fail()) {
-            clearScreen();
-			cout << "Input a number.\n";
-			cin.clear();
-			cin.ignore(1000, '\n');
-		}
-		else {
-            break;
-		}
-	}
-
-    s.top = nullptr;
-    for (int i = 0; i < size; i++) {
-        stackIn(s, rand() % 101 - 50);
-    }
-}
-
-void sortByDataExchange(Stack& s) {
-    if (s.top == nullptr || s.top->next == nullptr) return;
-    bool swapped;
-    do {
-        swapped = false;
-        Node* current = s.top;
-        while (current->next != nullptr) {
-            if (current->data > current->next->data) {
-                swap(current->data, current->next->data);
-                swapped = true;
-            }
-            current = current->next;
-        }
-    } while (swapped);
-}
-
-//три связи вместо двух(методичка 2018)
-/*
-void Sort_p(Stack **p) {
-    Node *t = NULL, *tl, *r;
-    if ((*p)->next->next == NULL) return;
-
-}
-*/
-
-void sortByAddressRearrangement(Stack& s) {
-    if (s.top == nullptr || s.top->next == nullptr) return;
-    bool swapped;
-    do {
-        swapped = false;
-        Node** current = &s.top;
-        while (*current != nullptr && (*current)->next != nullptr) {
-            Node* a = *current;
-            Node* b = a->next;
-            if (a->data > b->data) {
-                a->next = b->next;
-                b->next = a;
-                *current = b;
-                swapped = true;
-            }
-            current = &(*current)->next;
-        }
-    } while (swapped);
-}
-
-void removeEverySecond(Stack& s) {
-    if (s.top == nullptr) return;
-    Node* current = s.top;
-    Node* prev = nullptr;
-    int count = 1;
-    while (current != nullptr) {
-        if (count % 2 == 0) {
-            if (prev == nullptr) {
-                s.top = current->next;
-            } else {
-                prev->next = current->next;
-            }
-            Node* temp = current;
-            current = current->next;
-            delete temp;
-        } else {
-            prev = current;
-            current = current->next;
-        }
-        count++;
-    }
-}
-
-void deleteStack(Stack& s) {
-    while (s.top != nullptr) {
-        stackOut(s);
     }
 }
 
 int main() {
-    Stack s;
-    s.top = nullptr;
+    Stack* begin = NULL; 
+    int choice, n;
 
     while (true) {
-        cout << "=== Stack-Stick ===\n";
-        cout << "1. Create a random new stack\n";
-        cout << "2. Add a number to stack\n";
-        cout << "3. View an existing stack\n";
-        cout << "4. Sorting unidirectional lists:\n";
-        cout << "5. Task solution\n";
-        cout << "6. Exit\n";
-        cout << "Input: ";
-
-        short int choice;
-        cin >> choice;
+        cout << "\n1. Create/Add Random\n2. View\n3. Sort (Addresses)\n4. Sort (Data)\n5. Task (Remove every 2nd)\n6. Exit\nChoice: ";
+        while (!(cin >> choice) || choice > 6 || choice < 1) {
+        cout << "Input should be numbers from 1 to 6, try again: ";
+        cin.clear();
+        cin.ignore(1000, '\n');
+        }
+        if (choice == 6) break;
 
         switch (choice) {
             case 1:
-                createRandomStack(s);
-                viewStack(s);
-                waitForEnter();
+                system("cls");
+                cout << "Count: ";
+                while (!(cin >> n)) {
+                    cout << "Input should be integer type, try again: ";
+                    cin.clear();
+                    cin.ignore(1000, '\n');
+                    }
+                for (int i = 0; i < n; i++) begin = InStack(begin, rand() % 101 - 50);
                 break;
-            case 2: {
-                clearScreen();
-                int val;
-                while (true) {
-                    cout << "Enter number: ";
-                    cin >> val;
-		            if (cin.fail()) {
-                        clearScreen();
-			            cout << "Should be a number.\n";
-			            cin.clear();
-			            cin.ignore(1000, '\n');
-		            }
-		            else {
-                        break;
-		            }
-	            }
-                stackIn(s, val);
-                viewStack(s);
-                waitForEnter();
+            case 2:
+                system("cls"); 
+                View(begin);
                 break;
-            }
             case 3:
-                clearScreen();
-                viewStack(s);
-                waitForEnter();
+                system("cls");
+                sortByAddressRearrangement(&begin);
                 break;
-            case 4: {
-                clearScreen();
-                int method;
-                while (true) {
-                    cout << "   1. Rearranging the addresses of two neighboring elements\n";
-                    cout << "   2. Information exchange between current and next elements\n";
-                    cout << "Choose sorting method (1 or 2): ";
-                    cin >> method;
-		            if (cin.fail()) {
-                        clearScreen();
-			            cout << "Should be a number.\n";
-			            cin.clear();
-			            cin.ignore(1000, '\n');
-		            }
-		            else {
-                        break;
-		            }
-	            }
-                if (method == 1) {
-                    sortByAddressRearrangement(s);
-                    clearScreen();
-                } else if (method == 2) {
-                    sortByDataExchange(s);
-                    clearScreen();
-                } else {
-                    cout << "Invalid method\n";
-                }
-                viewStack(s);
-                waitForEnter();
+            case 4:
+                system("cls");
+                sortByDataExchange(begin);
                 break;
-            }
             case 5:
-                removeEverySecond(s);
-                viewStack(s);
-                waitForEnter();
+                system("cls");
+                View(begin); cout << endl;
+                removeEverySecond(&begin);
+                View(begin);
                 break;
-            case 6: {
-                cout << "Exiting...\n";
-                deleteStack(s);
-                return 0;
-            }
-            default:
-                cout << "Invalid choice\n";
-                waitForEnter();
         }
     }
-
+    Del_All(&begin);
     return 0;
 }
