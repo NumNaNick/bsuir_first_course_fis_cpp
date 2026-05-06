@@ -1,8 +1,8 @@
 [
   {
-    "directory": "C:\\Users\\geski\\Documents\\GitHub_Repos\\bsuir_first_course_fis_cpp\\Kursach\\builddir",
-    "command": "\"c++\" \"-Idemo.exe.p\" \"-I.\" \"-I..\" \"-fdiagnostics-color=always\" \"-D_GLIBCXX_ASSERTIONS=1\" \"-D_FILE_OFFSET_BITS=64\" \"-Wall\" \"-Winvalid-pch\" \"-O0\" \"-g\" -MD -MQ demo.exe.p/main.cpp.obj -MF \"demo.exe.p\\main.cpp.obj.d\" -o demo.exe.p/main.cpp.obj \"-c\" ../main.cpp",
+    "directory": "/home/loonikov/Documents/github/bsuir_first_course_fis_cpp/Kursach/buildir",
+    "command": "c++ -Idemo.p -I. -I.. -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -O0 -g -MD -MQ demo.p/main.cpp.o -MF demo.p/main.cpp.o.d -o demo.p/main.cpp.o -c ../main.cpp",
     "file": "../main.cpp",
-    "output": "demo.exe.p/main.cpp.obj"
+    "output": "demo.p/main.cpp.o"
   }
 ]

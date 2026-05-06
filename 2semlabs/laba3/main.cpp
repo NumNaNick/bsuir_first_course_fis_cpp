@@ -107,6 +107,7 @@ void removeEverySecond(Stack** p) {
 }
 
 int main() {
+    system("clear");
     Stack* begin = NULL; 
     int choice, n;
 
@@ -121,7 +122,7 @@ int main() {
 
         switch (choice) {
             case 1:
-                system("cls");
+                system("clear");
                 cout << "Count: ";
                 while (!(cin >> n)) {
                     cout << "Input should be integer type, try again: ";
@@ -131,19 +132,21 @@ int main() {
                 for (int i = 0; i < n; i++) begin = InStack(begin, rand() % 101 - 50);
                 break;
             case 2:
-                system("cls"); 
+                system("clear"); 
                 View(begin);
                 break;
             case 3:
-                system("cls");
+                system("clear");
                 sortByAddressRearrangement(&begin);
+                View(begin);
                 break;
             case 4:
-                system("cls");
+                system("clear");
                 sortByDataExchange(begin);
+                View(begin);
                 break;
             case 5:
-                system("cls");
+                system("clear");
                 View(begin); cout << endl;
                 removeEverySecond(&begin);
                 View(begin);

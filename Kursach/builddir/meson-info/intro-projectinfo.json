@@ -1,10 +1,1 @@
-{
-  "version": "undefined",
-  "descriptive_name": "kursovaya",
-  "license": [
-    "unknown"
-  ],
-  "license_files": [],
-  "subproject_dir": "subprojects",
-  "subprojects": []
-}
+{"version": "undefined", "descriptive_name": "kursovaya", "subproject_dir": "subprojects", "subprojects": []}

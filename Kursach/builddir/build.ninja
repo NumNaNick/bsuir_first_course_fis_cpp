@@ -9,7 +9,7 @@ ninja_required_version = 1.8.2
 # Rules for compiling.
 
 rule cpp_COMPILER
- command = "c++" $ARGS -MD -MQ $out -MF $DEPFILE -o $out "-c" $in
+ command = c++ $ARGS -MD -MQ $out -MF $DEPFILE -o $out -c $in
  deps = gcc
  depfile = $DEPFILE_UNQUOTED
  description = Compiling C++ object $out
@@ -17,7 +17,7 @@ rule cpp_COMPILER
 # Rules for linking.
 
 rule cpp_LINKER
- command = "c++" $ARGS -o $out $in $LINK_ARGS
+ command = c++ $ARGS -o $out $in $LINK_ARGS
  description = Linking target $out
 
 # Other rules
@@ -28,8 +28,8 @@ rule CUSTOM_COMMAND
  restat = 1
 
 rule REGENERATE_BUILD
- command = "C:\Program$ Files\Meson\meson.exe" "--internal" "regenerate" "C:\Users\geski\Documents\GitHub_Repos\bsuir_first_course_fis_cpp\Kursach" "."
- description = Regenerating build files
+ command = /usr/bin/meson --internal regenerate /home/loonikov/Documents/github/bsuir_first_course_fis_cpp/Kursach .
+ description = Regenerating build files.
  generator = 1
 
 # Phony build target, always out of date
@@ -38,28 +38,28 @@ build PHONY: phony
 
 # Build rules for targets
 
-build demo.exe.p/main.cpp.obj: cpp_COMPILER ../main.cpp
- DEPFILE = "demo.exe.p\main.cpp.obj.d"
- DEPFILE_UNQUOTED = demo.exe.p\main.cpp.obj.d
- ARGS = "-Idemo.exe.p" "-I." "-I.." "-fdiagnostics-color=always" "-D_GLIBCXX_ASSERTIONS=1" "-D_FILE_OFFSET_BITS=64" "-Wall" "-Winvalid-pch" "-O0" "-g"
+build demo.p/main.cpp.o: cpp_COMPILER ../main.cpp
+ DEPFILE = demo.p/main.cpp.o.d
+ DEPFILE_UNQUOTED = demo.p/main.cpp.o.d
+ ARGS = -Idemo.p -I. -I.. -fdiagnostics-color=always -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -O0 -g
 
-build demo.exe: cpp_LINKER demo.exe.p/main.cpp.obj | C$:/msys64/ucrt64/lib/libadvapi32.a C$:/msys64/ucrt64/lib/libcomdlg32.a C$:/msys64/ucrt64/lib/libgdi32.a C$:/msys64/ucrt64/lib/libkernel32.a C$:/msys64/ucrt64/lib/libole32.a C$:/msys64/ucrt64/lib/liboleaut32.a C$:/msys64/ucrt64/lib/libshell32.a C$:/msys64/ucrt64/lib/libuser32.a C$:/msys64/ucrt64/lib/libuuid.a C$:/msys64/ucrt64/lib/libwinspool.a
- LINK_ARGS = "-Wl,--allow-shlib-undefined" "-Wl,--subsystem,console" "-Wl,--start-group" "-lkernel32" "-luser32" "-lgdi32" "-lwinspool" "-lshell32" "-lole32" "-loleaut32" "-luuid" "-lcomdlg32" "-ladvapi32" "-Wl,--end-group"
+build demo: cpp_LINKER demo.p/main.cpp.o
+ LINK_ARGS = -Wl,--as-needed -Wl,--no-undefined
 
 # Test rules
 
 build test: phony meson-internal__test
 
-build meson-internal__test: CUSTOM_COMMAND all meson-test-prereq PHONY
- COMMAND = "C:\Program$ Files\Meson\meson.exe" "test" "--no-rebuild" "--print-errorlogs"
- DESC = Running$ all$ tests
+build meson-internal__test: CUSTOM_COMMAND all PHONY
+ COMMAND = /usr/bin/meson test --no-rebuild --print-errorlogs
+ DESC = Running$ all$ tests.
  pool = console
 
 build benchmark: phony meson-internal__benchmark
 
-build meson-internal__benchmark: CUSTOM_COMMAND all meson-benchmark-prereq PHONY
- COMMAND = "C:\Program$ Files\Meson\meson.exe" "test" "--benchmark" "--logbase" "benchmarklog" "--num-processes=1" "--no-rebuild"
- DESC = Running$ benchmark$ suite
+build meson-internal__benchmark: CUSTOM_COMMAND all PHONY
+ COMMAND = /usr/bin/meson test --benchmark --logbase benchmarklog --num-processes=1 --no-rebuild
+ DESC = Running$ benchmark$ suite.
  pool = console
 
 # Install rules
@@ -67,15 +67,15 @@ build meson-internal__benchmark: CUSTOM_COMMAND all meson-benchmark-prereq PHONY
 build install: phony meson-internal__install
 
 build meson-internal__install: CUSTOM_COMMAND PHONY | all
- DESC = Installing$ files
- COMMAND = "C:\Program$ Files\Meson\meson.exe" "install" "--no-rebuild"
+ DESC = Installing$ files.
+ COMMAND = /usr/bin/meson install --no-rebuild
  pool = console
 
 build dist: phony meson-internal__dist
 
 build meson-internal__dist: CUSTOM_COMMAND PHONY
  DESC = Creating$ source$ packages
- COMMAND = "C:\Program$ Files\Meson\meson.exe" "dist"
+ COMMAND = /usr/bin/meson dist
  pool = console
 
 # Suffix
@@ -83,10 +83,10 @@ build meson-internal__dist: CUSTOM_COMMAND PHONY
 build uninstall: phony meson-internal__uninstall
 
 build meson-internal__uninstall: CUSTOM_COMMAND PHONY
- COMMAND = "C:\Program$ Files\Meson\meson.exe" "--internal" "uninstall"
+ COMMAND = /usr/bin/meson --internal uninstall
  pool = console
 
-build all: phony demo.exe
+build all: phony meson-test-prereq meson-benchmark-prereq demo
 
 build meson-test-prereq: phony 
 
@@ -95,7 +95,7 @@ build meson-benchmark-prereq: phony
 build clean: phony meson-internal__clean
 
 build meson-internal__clean: CUSTOM_COMMAND PHONY
- COMMAND = "C:\Program$ Files\Meson\ninja.EXE" "-t" "clean"
+ COMMAND = /usr/bin/ninja -t clean
  description = Cleaning
 
 build build.ninja: REGENERATE_BUILD ../meson.build meson-private/coredata.dat

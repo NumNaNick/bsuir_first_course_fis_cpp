@@ -41,7 +41,8 @@ int strcmp(const char* s1, const char* s2) {
 }
 
 void clearScreen() { 
-    system("cls"); 
+    system("clear");
+    //system("cls"); 
 }
 
 void waitForEnter() {
@@ -50,10 +51,10 @@ void waitForEnter() {
 }
 
 void printTicket(Ticket t) {
-    cout << "----------------------------------------" << endl;
-    cout << "Зона: " << t.zone << " | Мест: " << t.free_seats << endl;
-    cout << "Цена: " << t.price << " | Тип: " << t.chair_type << endl;
-    cout << "Льгота: " << (t.is_discount_allowed ? "Да" : "Нет") << endl;
+    cout << "Зона: " << t.zone << " | Мест: " << t.free_seats << 
+    " | Цена: " << t.price << " | Тип: " << t.chair_type << 
+    " | Льгота: " << (t.is_discount_allowed ? "Да" : "Нет") << endl;
+    cout << "---------------------------------------------------------------------------------------" << endl;
 }
 
 Ticket getAt(FILE* f, int i) {
@@ -312,7 +313,7 @@ void addTicket() {
 }
 
 int main() {
-    system("chcp 65001 > nul");
+    setlocale(LC_ALL, "RU");
     int choice;
     do {
         clearScreen();
@@ -361,6 +362,7 @@ int main() {
             }
             case 5: { 
                 cout << "Цена: "; 
+                bubbleSortByPrice();
                 interpolationSearchByPrice(getValidFloat()); 
                 waitForEnter(); 
                 break; 
@@ -393,7 +395,7 @@ int main() {
                 waitForEnter(); 
                 break; 
             }
-            case 10: statisticsByChairType(); waitForEnter(); break;
+            case 10: clearScreen(); statisticsByChairType(); waitForEnter(); break;
         }
     } while (choice != 11);
     return 0;
